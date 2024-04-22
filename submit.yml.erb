@@ -47,6 +47,16 @@ script:
         host_type: File
         path: /etc/nsswitch.conf
         destination_path: /etc/nsswitch.conf
+      - type: host
+        name: subuid
+        host_type: File
+        path: /etc/subuid
+        destination_path: /etc/subuid
+      - type: host
+        name: subgid
+        host_type: File
+        path: /etc/subgid
+        destination_path: /etc/subgid
     configmap:
       files:
         - filename: "<%= configmap_filename %>"
