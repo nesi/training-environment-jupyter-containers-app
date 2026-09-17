@@ -11,7 +11,7 @@ A running session gives learners two buttons:
   same shell
 
 Both connect to the same Jupyter server in the same pod, so files and running work are shared
-between them. The terminal page is served by the `notebook` package at `/terminals/1`, which is why
+between them. The workshop examples are waiting in `~/containers-workshop`. The terminal page is served by the `notebook` package at `/terminals/1`, which is why
 *docker/Dockerfile* installs `notebook` alongside `jupyterlab`; the *Connect to Terminal* button
 passes `next=` to the login form so it lands there directly.
 
@@ -34,10 +34,24 @@ passes `next=` to the login form so it lands there directly.
 * `APPTAINER_TMPDIR=/tmp/apptainer-$USER` — builds use the pod's local disk, not the NFS home
   directory, which is slow and can fail for builds
 
-## Examples
+## Workshop examples
 
-*docker/examples/* is baked into the image at */opt/apptainer-examples* and rsynced into
-`~/apptainer-examples` at startup with `--ignore-existing`, so learners' edits survive a restart.
+The examples come from the [workshop repo](https://github.com/nesi/reannz-containers-workshop),
+pinned by commit in *docker/workshop-version.txt*. They are baked into the image at
+*/opt/containers-workshop/examples* and rsynced into `~/containers-workshop` at startup with
+`--ignore-existing`, so learners' edits survive a restart.
+
+The two [chapter 2](https://nesi.github.io/reannz-containers-workshop/setup-containers/#2-the-basics-of-running-containers-on-apptainer)
+containers (*hello-world.sif* and *lolcow.sif*) ship prebuilt, so nobody waits for them at the start
+of the workshop. They are built by *.github/workflows/build_container.yml* **on the runner**, not in
+the docker build, because building a `.sif` needs mount privileges that a `RUN` step does not have.
+The workflow drops them into *docker/prebuilt/*, which the Dockerfile moves into the chapter 2
+example directory. Building the image by hand leaves that directory empty, which is fine — the
+definition files are all still there.
+
+To move to a newer version of the workshop material, change the commit in
+*docker/workshop-version.txt* and release a new version of this app. Both the definition files and
+the prebuilt images come from that one revision.
 
 ## Releasing a new version
 
