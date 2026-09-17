@@ -3,18 +3,18 @@
 JupyterLab app with [Apptainer](https://apptainer.org/) installed, for running containers workshops
 on the NeSI/REANNZ [training environment](https://github.com/nesi/training-environment).
 
-This repo holds both the **JupyterLab** app and the **image that all three Apptainer apps share**:
+This repo is the **JupyterLab** tile. The workshop has three tiles, each its own repo building its
+own image, because Open OnDemand installs one app per git repo:
 
 | Dashboard tile | Repo | Connects to |
 | --- | --- | --- |
 | JupyterLab | this one | JupyterLab |
-| Terminal | [training-environment-containers-terminal-app](https://github.com/nesi/training-environment-containers-terminal-app) | the full page terminal at `/terminals/1` |
-| VS Code | [training-environment-containers-codeserver-app](https://github.com/nesi/training-environment-containers-codeserver-app) | code-server |
+| Terminal | [training-environment-terminal-containers-app](https://github.com/nesi/training-environment-terminal-containers-app) | the full page terminal at `/terminals/1` |
+| VS Code | [training-environment-codeserver-containers-app](https://github.com/nesi/training-environment-codeserver-containers-app) | code-server |
 
-Each Open OnDemand dashboard tile has to be its own git repo, but all three run
-`ghcr.io/nesi/training-environment-jupyter-containers-app`, built here. So there is one image to
-build and pre-pull, and the other two repos contain only app definitions. When you release a new
-version here, update the image tag in all three.
+The three *docker/Dockerfile* files are the same, so a change to one usually belongs in all three,
+as does a bump of *docker/workshop-version.txt*. Each is pre-pulled separately, so together they are
+around 8 GB on every worker node.
 
 The workshop examples are waiting in `~/containers-workshop`. The terminal page is served by the
 `notebook` package, which is why *docker/Dockerfile* installs `notebook` alongside `jupyterlab`, and
