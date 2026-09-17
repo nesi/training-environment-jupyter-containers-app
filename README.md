@@ -8,8 +8,8 @@ This repo holds both the **JupyterLab** app and the **image that all three Appta
 | Dashboard tile | Repo | Connects to |
 | --- | --- | --- |
 | JupyterLab | this one | JupyterLab |
-| Terminal | [training-environment-apptainer-terminal-app](https://github.com/nesi/training-environment-apptainer-terminal-app) | the full page terminal at `/terminals/1` |
-| VS Code | [training-environment-apptainer-codeserver-app](https://github.com/nesi/training-environment-apptainer-codeserver-app) | code-server |
+| Terminal | [training-environment-containers-terminal-app](https://github.com/nesi/training-environment-containers-terminal-app) | the full page terminal at `/terminals/1` |
+| VS Code | [training-environment-containers-codeserver-app](https://github.com/nesi/training-environment-containers-codeserver-app) | code-server |
 
 Each Open OnDemand dashboard tile has to be its own git repo, but all three run
 `ghcr.io/nesi/training-environment-jupyter-containers-app`, built here. So there is one image to
