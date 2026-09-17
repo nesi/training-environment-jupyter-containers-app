@@ -54,5 +54,31 @@ RUN add-apt-repository -y ppa:apptainer/ppa \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y apptainer-suid \
     && rm -rf /var/lib/apt/lists/*
 
+# the workshop example files, copied into the user's home directory at startup
+# by template/script.sh.erb
+# the revision is pinned in workshop-version.txt, which the github workflow
+# reads as well so that the prebuilt containers below match these definition files
+# chapter 9 (MPI) is left out, it is written for a slurm cluster
+COPY workshop-version.txt /tmp/workshop-version.txt
+RUN git clone https://github.com/nesi/reannz-containers-workshop.git /tmp/workshop \
+    && git -C /tmp/workshop checkout "$(cat /tmp/workshop-version.txt)" \
+    && mkdir -p /opt/containers-workshop \
+    && cp -r /tmp/workshop/examples /opt/containers-workshop/examples \
+    && rm -rf /opt/containers-workshop/examples/09_running_containers_with_MPI \
+    && rm -rf /tmp/workshop /tmp/workshop-version.txt
+
+# the chapter 2 containers, built on the runner by .github/workflows/build_container.yml
+# following https://nesi.github.io/reannz-containers-workshop/setup-containers/
+# so that learners do not have to wait for them at the start of the workshop
+# (this directory is empty when building the image by hand, which is fine - the
+#  definition files are all still there to build from)
+COPY prebuilt/ /tmp/prebuilt/
+RUN find /tmp/prebuilt -name '*.sif' -exec mv {} /opt/containers-workshop/examples/02_basics_of_containers/ \; \
+    && rm -rf /tmp/prebuilt
+
+COPY workshop-readme.md /opt/containers-workshop/README.md
+RUN chown -R root:root /opt/containers-workshop \
+    && chmod -R o+rX /opt/containers-workshop
+
 # install jupyterlab
 RUN pip3 --no-cache-dir install jupyterlab
