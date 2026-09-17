@@ -17,7 +17,7 @@ script:
   native:
     container:
       name: "containers"
-      image: "ghcr.io/nesi/training-environment-jupyter-containers-app:v0.1.2"
+      image: "ghcr.io/nesi/training-environment-jupyter-containers-app:v0.2.0"
       command: ["/bin/bash","-l","<%= staged_root %>/job_script_content.sh"]
       working_dir: "<%= Etc.getpwnam(ENV['USER']).dir %>"
       restart_policy: 'OnFailure'
@@ -68,6 +68,8 @@ script:
             c.ServerApp.allow_origin = '*'
             c.ServerApp.root_dir = '<%= user.home %>'
             c.ServerApp.disable_check_xsrf = True
+            c.ServerApp.terminals_enabled = True
+            c.ServerApp.terminado_settings = {'shell_command': ['/bin/bash', '-l']}
           mount_path: '/ood'
     init_containers:
     - name: "init-secret"

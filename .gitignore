@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# editors
+.idea/
+*.swp
+*~
+
+# python
+__pycache__/
+
+# apptainer images, in case any are built in the repo while testing
+*.sif
