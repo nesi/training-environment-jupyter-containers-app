@@ -5,32 +5,18 @@ exec &> >(tee -a "${LOG_DIR}/pod.log")
 
 echo "TIMING - Starting main script at: $(date)"
 
-# copying config file for debugging
-cp "${CONFIG_FILE}" ./
+# copying config file for debugging - updated path
+cp "${HOME}/ondemand_config.py" ./
+
 
 # Set working directory to home directory
 cd "${HOME}"
 
+echo "TIMING - Starting jupyter at: $(date)"
+
 set -x
 
-# apptainer settings
-# - the cache lives in the home directory so pulled images are still there when
-#   the session is restarted
-# - the build/tmp directory is local to the pod, building on the NFS home
-#   directory is slow and can fail
-# these are exported before jupyter starts, so terminals inherit them
-export APPTAINER_CACHEDIR="${HOME}/.apptainer/cache"
-export APPTAINER_TMPDIR="/tmp/apptainer-${USER}"
-mkdir -p "${APPTAINER_CACHEDIR}" "${APPTAINER_TMPDIR}"
-
-# copy the workshop examples, including the prebuilt chapter 2 containers
-# note: this will not overwrite files if they already exist, so changes won't
-#       be lost when restarting the app
-rsync --ignore-existing -avz /opt/containers-workshop/ ~/containers-workshop/
-
 apptainer --version
-
-echo "TIMING - Starting jupyter at: $(date)"
 
 # launch JupyterLab
 jupyter lab --config="${CONFIG_FILE}"

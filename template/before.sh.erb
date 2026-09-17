@@ -4,16 +4,12 @@ exec &> >(tee -a "session.log")
 # that is run when the batch job starts up. It is called before the `script.sh`
 # is forked off into a separate process.
 
-# Export the module function if it exists, to avoid warnings from job_script_content.sh
-[[ $(type -t module) == "function" ]] && export -f module
-
 # setup host and port
 source /bin/find_host_port
 export host="$HOST_CFG"
 export port="$PORT_CFG"
 
-echo "host is: ${host}"
-echo "port is: ${port}"
+export hostname=$(kubectl get pods $(hostname) -o jsonpath="{.spec.nodeName}").cloud.nesi.nz
 
 # setup password
 source /bin/save_passwd_as_secret
@@ -21,9 +17,6 @@ export password="$PASSWORD"
 source /bin/create_salt_and_sha1
 
 # write config file for JupyterLab
-# note: base_url is built from the same HOST_CFG/PORT_CFG that view.html.erb
-#       uses for the connect button, so the path the browser requests and the
-#       path JupyterLab serves always match
 export CONFIG_FILE=${PWD}/ondemand_config.py
 cat << EOF > "${CONFIG_FILE}"
 c.FileContentsManager.delete_to_trash = False
@@ -32,7 +25,7 @@ c.LabApp.extension_manager = 'pypi'
 c.LabServerApp.copy_absolute_path = True
 c.PluginManager.level = 'user'
 c.ServerApp.allow_origin = '*'
-c.ServerApp.base_url = "/node/${HOST_CFG}/${PORT_CFG}/"
+c.ServerApp.base_url = "/node/${hostname}/${PORT_CFG}/"
 c.ServerApp.disable_check_xsrf = True
 c.ServerApp.ip = '0.0.0.0'
 c.ServerApp.open_browser = False
@@ -40,8 +33,6 @@ c.ServerApp.password = u"sha1:${SALT}:${PASSWORD_SHA1}"
 c.ServerApp.port = 8080
 c.ServerApp.port_retries = 0
 c.ServerApp.root_dir = "${HOME}"
-c.ServerApp.terminals_enabled = True
-c.ServerApp.terminado_settings = {'shell_command': ['/bin/bash', '-l']}
 EOF
 
 # Make sure config file is readable
