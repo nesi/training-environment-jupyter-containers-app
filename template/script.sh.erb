@@ -16,11 +16,6 @@ echo "TIMING - Starting jupyter at: $(date)"
 
 set -x
 
-# copy the workshop examples, including the prebuilt chapter 2 containers
-# note: this will not overwrite files if they already exist, so changes won't
-#       be lost when restarting the app
-rsync --ignore-existing -avz /opt/containers-workshop/ ~/containers-workshop/
-
 apptainer --version
 
 # launch JupyterLab

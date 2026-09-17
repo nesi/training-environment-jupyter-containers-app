@@ -22,29 +22,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      # Apptainer is installed on the runner (not in the image build) because building a
-      # .sif needs mount privileges that a docker build step does not have.
-      - name: Install apptainer
-        run: |
-          sudo add-apt-repository -y ppa:apptainer/ppa
-          sudo apt-get update
-          sudo apt-get install -y apptainer
-      # Builds the chapter 2 containers following
-      # https://nesi.github.io/reannz-containers-workshop/setup-containers/#2-the-basics-of-running-containers-on-apptainer
-      # so learners do not have to wait for them. The revision is pinned in
-      # docker/workshop-version.txt, which the Dockerfile also uses for the definition files.
-      - name: Build the chapter 2 example containers
-        run: |
-          set -euo pipefail
-          WORKSHOP_REF="$(cat docker/workshop-version.txt)"
-          git clone https://github.com/nesi/reannz-containers-workshop.git /tmp/workshop
-          git -C /tmp/workshop checkout "$WORKSHOP_REF"
-          cd /tmp/workshop/examples/02_basics_of_containers
-          sudo apptainer build hello-world.sif hello-world.def
-          sudo apptainer build lolcow.sif lolcow.def
-          sudo chown "$(id -u):$(id -g)" ./*.sif
-          cp ./*.sif "${GITHUB_WORKSPACE}/docker/prebuilt/"
-          ls -lh "${GITHUB_WORKSPACE}/docker/prebuilt/"
       # Uses the `docker/login-action` action to log in to the Container registry registry using the account and password that will publish the packages. Once published, the packages are scoped to the account defined here.
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
