@@ -1,16 +1,6 @@
-<form action="/node/<%= host %>/<%= port %>/login" method="post" target="_blank" style="display: inline-block;">
+<form action="/node/<%= host %>/<%= port %>/login" method="post" target="_blank">
   <input type="hidden" name="password" value="<%= password %>">
   <button class="btn btn-primary" type="submit">
-    <i class="fa fa-cube"></i> Connect to JupyterLab
-  </button>
-</form>
-
-<%# the terminal page is served by the `notebook` package, installed alongside
-    jupyterlab in docker/Dockerfile. `next` makes the login redirect straight
-    to it, which works because disable_check_xsrf is set in submit.yml.erb %>
-<form action="/node/<%= host %>/<%= port %>/login?next=%2Fnode%2F<%= host %>%2F<%= port %>%2Fterminals%2F1" method="post" target="_blank" style="display: inline-block;">
-  <input type="hidden" name="password" value="<%= password %>">
-  <button class="btn btn-primary" type="submit">
-    <i class="fa fa-terminal"></i> Connect to Terminal
+    <i class="fa fa-eye"></i> Connect to JupyterLab
   </button>
 </form>

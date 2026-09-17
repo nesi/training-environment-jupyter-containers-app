@@ -3,17 +3,33 @@
 JupyterLab app with [Apptainer](https://apptainer.org/) installed, for running containers workshops
 on the NeSI/REANNZ [training environment](https://github.com/nesi/training-environment).
 
-A running session gives learners two buttons:
+This repo holds both the **JupyterLab** app and the **image that all three Apptainer apps share**:
 
-* **Connect to Terminal** — a full page terminal, which is where Apptainer is actually used
-  (`apptainer pull`, `apptainer build`, `apptainer shell`)
-* **Connect to JupyterLab** — the usual JupyterLab interface; *File > New > Terminal* gets you the
-  same shell
+| Dashboard tile | Repo | Connects to |
+| --- | --- | --- |
+| JupyterLab | this one | JupyterLab |
+| Terminal | [training-environment-apptainer-terminal-app](https://github.com/nesi/training-environment-apptainer-terminal-app) | the full page terminal at `/terminals/1` |
+| VS Code | [training-environment-apptainer-codeserver-app](https://github.com/nesi/training-environment-apptainer-codeserver-app) | code-server |
 
-Both connect to the same Jupyter server in the same pod, so files and running work are shared
-between them. The workshop examples are waiting in `~/containers-workshop`. The terminal page is served by the `notebook` package at `/terminals/1`, which is why
-*docker/Dockerfile* installs `notebook` alongside `jupyterlab`; the *Connect to Terminal* button
-passes `next=` to the login form so it lands there directly.
+Each Open OnDemand dashboard tile has to be its own git repo, but all three run
+`ghcr.io/nesi/training-environment-jupyter-containers-app`, built here. So there is one image to
+build and pre-pull, and the other two repos contain only app definitions. When you release a new
+version here, update the image tag in all three.
+
+The workshop examples are waiting in `~/containers-workshop`. The terminal page is served by the
+`notebook` package, which is why *docker/Dockerfile* installs `notebook` alongside `jupyterlab`, and
+`code-server` is installed for the VS Code app.
+
+## How a session is set up
+
+*template/before.sh.erb* sets the connection details, following the same pattern as
+[training-environment-jupyter-python-app](https://github.com/nesi/training-environment-jupyter-python-app):
+it sources `find_host_port`, `save_passwd_as_secret` and `create_salt_and_sha1` from */bin* (the ood
+k8s utils, baked into the image), exports `host`, `port` and `password` for *view.html.erb*, and
+writes the JupyterLab config. There are no init containers.
+
+`base_url` is built from the same `HOST_CFG`/`PORT_CFG` that the connect button uses, so the path
+the browser requests always matches the path JupyterLab serves.
 
 ## Requirements in the training environment
 
