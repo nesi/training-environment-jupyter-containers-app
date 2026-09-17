@@ -60,6 +60,7 @@ RUN git clone https://github.com/nesi/reannz-containers-workshop.git /tmp/worksh
     && git -C /tmp/workshop checkout "$(cat /tmp/workshop-version.txt)" \
     && mkdir -p /opt/containers-workshop \
     && cp -r /tmp/workshop/examples /opt/containers-workshop/examples \
+    && rm -rf /opt/containers-workshop/examples/09_running_containers_with_MPI \
     && rm -rf /tmp/workshop /tmp/workshop-version.txt
 
 # the chapter 2 containers, built on the runner by .github/workflows/build_container.yml

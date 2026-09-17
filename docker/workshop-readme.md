@@ -40,5 +40,6 @@ Notes:
   because building on NFS is slow and can fail.
 * Your home directory is bind mounted into the container by default, so `$HOME` inside a container
   is the same `$HOME` you see outside it.
-* The MPI examples in `09_running_containers_with_MPI` are written for a Slurm cluster and are not
-  expected to run in this training environment.
+* The MPI examples (chapter 9) are not included here — they are written for a Slurm cluster. They
+  are in the [workshop repo](https://github.com/nesi/reannz-containers-workshop/tree/main/examples)
+  if you want them.

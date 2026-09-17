@@ -41,6 +41,9 @@ pinned by commit in *docker/workshop-version.txt*. They are baked into the image
 */opt/containers-workshop/examples* and rsynced into `~/containers-workshop` at startup with
 `--ignore-existing`, so learners' edits survive a restart.
 
+The chapter 9 MPI examples are dropped, since they are written for a Slurm cluster and will not run
+here.
+
 The two [chapter 2](https://nesi.github.io/reannz-containers-workshop/setup-containers/#2-the-basics-of-running-containers-on-apptainer)
 containers (*hello-world.sif* and *lolcow.sif*) ship prebuilt, so nobody waits for them at the start
 of the workshop. They are built by *.github/workflows/build_container.yml* **on the runner**, not in
