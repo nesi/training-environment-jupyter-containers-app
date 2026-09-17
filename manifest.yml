@@ -1,8 +1,8 @@
 ---
-name: Apptainer
+name: JupyterLab
 category: Interactive Apps
 subcategory: Servers
 role: batch_connect
 description: |
   This app will launch a Jupyter Lab server with Apptainer installed, for the
-  containers workshop. Connect to it as a terminal or as JupyterLab.
+  containers workshop
